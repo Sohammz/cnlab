@@ -1,0 +1,120 @@
+TO JUST CONNECT 
+SERVER 
+import java.io.*; 
+import java.net.*; 
+ 
+public class SimpleServer { 
+    public static void main(String[] args) throws IOException { 
+        ServerSocket ss = new ServerSocket(5555); 
+        System.out.println("Server is waiting for client connection..."); 
+ 
+        Socket s = ss.accept();  // Accept the client connection 
+        System.out.println("Client connected!"); 
+ 
+        ss.close(); 
+        s.close(); 
+    } 
+} 
+CLIENT 
+import java.io.*; 
+import java.net.*; 
+ 
+public class SimpleClient { 
+    public static void main(String[] args) throws IOException { 
+        Socket s = new Socket("localhost", 5555); 
+        System.out.println("Connected to server!"); 
+ 
+        s.close(); 
+    } 
+} 
+ 
+TO CREATE CHAT 
+SERVER 
+import java.io.*; 
+import java.net.*; 
+public class ChatServer { 
+    public static void main(String[] args) throws IOException { 
+        ServerSocket ss = new ServerSocket(5555); 
+        Socket s = ss.accept(); 
+        BufferedReader in = new BufferedReader(new 
+InputStreamReader(s.getInputStream())); 
+        PrintWriter out = new PrintWriter(s.getOutputStream(), true); 
+        BufferedReader keyboard = new BufferedReader(new 
+InputStreamReader(System.in)); 
+        while (true) { 
+            out.println(keyboard.readLine()); 
+            System.out.println(in.readLine()); 
+        } 
+    } 
+} 
+CLIENT 
+import java.io.*; 
+import java.net.*; 
+ 
+public class ChatClient { 
+    public static void main(String[] args) throws IOException { 
+        Socket s = new Socket("localhost", 5555); 
+ 
+        BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream())); 
+        PrintWriter out = new PrintWriter(s.getOutputStream(), true); 
+        BufferedReader keyboard = new BufferedReader(new InputStreamReader(System.in)); 
+ 
+        while (true) { 
+            out.println(keyboard.readLine()); 
+            System.out.println(in.readLine()); 
+        } 
+    } 
+} 
+ 
+TO ADD 2 NUMBERS 
+SERVER 
+import java.io.*; 
+import java.net.*; 
+public class AddServer { 
+    public static void main(String[] args) throws IOException { 
+        System.out.println("Establishing connection..."); 
+        ServerSocket ss = new ServerSocket(5555);  // Server listens on port 5555 
+        Socket s = ss.accept();  // Accept client connection 
+        System.out.println("Connection established"); 
+        DataInputStream dis = new DataInputStream(s.getInputStream()); 
+        int res = dis.read();  // Receive sum from client 
+        System.out.println("Result is: " + res); 
+        dis.close(); 
+        s.close(); 
+        ss.close(); 
+    } 
+} 
+ 
+ 
+CLIENT 
+ 
+import java.io.*; 
+import java.net.*; 
+import java.util.Scanner; 
+ 
+public class AddClient { 
+    public static void main(String[] args) throws IOException { 
+        Scanner sc = new Scanner(System.in); 
+ 
+        // Reading two integers from user 
+        System.out.println("Enter first number: "); 
+        int a = sc.nextInt(); 
+        System.out.println("Enter second number: "); 
+        int b = sc.nextInt(); 
+ 
+        // Calculating sum 
+        int c = a + b; 
+ 
+        // Establish connection to the server 
+        Socket s = new Socket("localhost", 5555);  // Connect to server on port 5555 
+ 
+        // Sending the sum to the server 
+        DataOutputStream dos = new DataOutputStream(s.getOutputStream()); 
+        dos.write(c);  // Send sum to server 
+ 
+        // Closing the connections 
+        dos.close(); 
+        s.close(); 
+        sc.close(); 
+    } 
+}
